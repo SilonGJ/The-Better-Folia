@@ -1,0 +1,49 @@
+name: ${name}
+version: ${version}
+main: ${group}.TheBetterFoliaPlugin
+api-version: "1.21"
+folia-supported: true
+
+author: The-Better-Folia Team
+description: A high-performance Folia-compatible server plugin with AppleSkin, Litematica EasyPlace, and ServUX protocol support
+website: https://github.com/TheBetterFolia/The-Better-Folia
+
+depend:
+  - ProtocolLib
+
+commands:
+  rubish:
+    description: 打开公共垃圾桶，取回被清理的掉落物
+    usage: /rubish
+    permission: thebetterfolia.rubish
+  clean:
+    description: 申请手动清理掉落物（需要投票同意）
+    usage: /clean [yes]
+
+permissions:
+  thebetterfolia.admin:
+    description: 允许使用所有 TheBetterFolia 管理命令
+    default: op
+
+  thebetterfolia.rubish:
+    description: 允许使用公共垃圾桶命令
+    default: true
+  thebetterfolia.clean:
+    description: 允许发起清理投票
+    default: true
+
+  thebetterfolia.protocol.*:
+    description: 允许使用所有协议功能
+    default: true
+
+  thebetterfolia.protocol.appleskin:
+    description: 允许 AppleSkin 协议（显示饱食度等数据）
+    default: true
+
+  thebetterfolia.protocol.litematica:
+    description: 允许 Litematica 轻松放置协议
+    default: true
+
+  thebetterfolia.protocol.servux:
+    description: 允许 ServUX 协议（实体数据、HUD数据、结构数据等）
+    default: true

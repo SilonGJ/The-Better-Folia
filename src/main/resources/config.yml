@@ -1,0 +1,114 @@
+# ==============================================
+# The-Better-Folia 配置文件
+# ==============================================
+
+# 调试模式开关
+# true: 输出详细调试日志
+# false: 只输出必要日志
+debug: false
+
+# ==============================================
+# ServUX 协议配置
+# ==============================================
+servux:
+  # 实体同步 - 支持 MiniHUD 实体数据预览 (玩家/生物)
+  entity_sync: true
+
+  # HUD 同步 - 支持 MiniHUD 数据显示 (饱和度/疲劳度等)
+  hud_sync: true
+
+  # 结构协议 - 支持 MiniHUD 结构边界框显示
+  structures: true
+
+  # 容器/方块实体预览
+  container_preview:
+    # 总的容器预览开关
+    # false: 关闭所有容器/方块实体/生物预览
+    enabled: true
+    # 允许预览玩家背包 (包括末影箱)
+    # false: 不发送背包数据
+    preview_inventory: true
+    # 允许预览生物/玩家实体
+    # false: 只预览方块容器
+    preview_entities: true
+
+# ==============================================
+# 投影协议配置 (Litematica)
+# ==============================================
+schematica:
+  # Litematica 原理图同步
+  litematics: true
+  # EasyPlace 快速放置 (需要 ProtocolLib)
+  easy_place: true
+  # EasyPlace 方块状态修正延迟 (ticks)
+  # 0 = 立即修正, 1 = 延迟1tick (推荐, 给其他插件处理时间)
+  easy_place_apply_delay: 1
+
+# ==============================================
+# 其他协议
+# ==============================================
+# AppleSkin - 显示玩家的饱和度和疲劳度信息
+appleskin: true
+
+# ==============================================
+# 掉落物清理配置
+# ==============================================
+cleanup:
+  # 是否启用自动清理
+  enabled: true
+  # 清理间隔（单位：秒）
+  interval: 1800
+  # 清理完成后的公屏通知（MiniMessage 格式）
+  # 自定义占位符: {amount} - 本次清理的物品总数
+  # MiniMessage 标签: <green>, <yellow>, <red>, <bold>, <reset>
+  # 点击事件: <click:run_command:/命令>文字</click>
+  # 悬停提示: <hover:show_text:'提示文字'>文字</hover>
+  message: "<yellow>已清理 <green>{amount}</green> 个掉落物，点击 <click:run_command:/rubish><hover:show_text:'<yellow>点击打开垃圾桶'><green>此处</green></hover></click> <yellow>打开垃圾桶"
+
+  # 清理前公屏警告配置
+  # key: 提前多少秒提醒
+  # value: 提醒内容（MiniMessage 格式）
+  warnings:
+    600: "<bold><yellow>[清理]</bold> <reset><yellow>掉落物将在10分钟后清理，请及时拾取！"
+    300: "<bold><yellow>[清理]</bold> <reset><yellow>掉落物将在5分钟后清理"
+    60: "<bold><yellow>[清理]</bold> <reset><yellow>掉落物将在1分钟后清理"
+    10: "<bold><red>[清理]</bold> <reset><red>掉落物将在10秒后清理"
+    5: "<bold><red>[清理]</bold> <reset><red>掉落物将在5秒后清理"
+    3: "<bold><red>[清理]</bold> <reset><red>掉落物将在3秒后清理"
+    2: "<bold><red>[清理]</bold> <reset><red>掉落物将在2秒后清理"
+    1: "<bold><red>[清理]</bold> <reset><red>掉落物将在1秒后清理"
+
+  # 公共垃圾桶设置
+  bin:
+    # 最大页数，超过此页数自动清空（0 = 不限）
+    max_pages: 0
+    # 定时清空间隔（秒）（0 = 不启用）
+    auto_clear_interval: 7200
+
+  # 玩家手动清理投票设置 (/clean)
+  vote:
+    # 是否启用投票功能
+    enabled: true
+    # 投票冷却时间（秒）
+    cooldown: 120
+    # 投票持续时间（秒）
+    duration: 30
+    # 需要同意的比例 (0.0 - 1.0)，例如 0.5 表示需要半数以上玩家同意
+    ratio: 0.5
+    # 最小在线人数要求
+    min_players: 1
+    # 发起投票的公屏通知（MiniMessage 格式）
+    # 自定义占位符:
+    #   {player} - 发起玩家名
+    #   {ratio}  - 所需比例（百分比数字）
+    #   {votes}  - 当前同意数
+    #   {needed} - 需要的最少同意数
+    apply_message: "<yellow>[投票] <green>{player}</green> <yellow>申请手动清理掉落物！点击 <click:run_command:/clean yes><hover:show_text:'<yellow>点击同意清理'><green>此处</green></hover></click> <yellow>同意（需 {ratio}% 玩家，当前 {votes}/{needed}）"
+    # 投票成功的公屏通知
+    success_message: "<yellow>[投票] <green>投票通过！</green>"
+    # 投票失败的公屏通知
+    fail_message: "<yellow>[投票] <red>投票未通过，清理申请已取消</red>"
+    # 冷却中的提示
+    cooldown_message: "<red>清理投票冷却中，剩余 <green>{time}</green> <red>秒"
+    # 已有投票时的提示
+    already_message: "<red>已有清理投票正在进行中"
