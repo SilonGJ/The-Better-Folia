@@ -1,83 +1,79 @@
 # The-Better-Folia
 
-A high-performance Folia-compatible Bukkit/Paper plugin providing AppleSkin, Litematica EasyPlace, and ServUX protocol support, along with an item cleanup system.
+一个高性能、兼容 Folia 的 Bukkit/Paper 服务端插件，提供 AppleSkin、Litematica EasyPlace 和 ServUX 协议支持，以及物品清理系统。
 
-## Features
+## 功能
 
-### Protocol Support
-- **AppleSkin** — Syncs player saturation and exhaustion data with the AppleSkin mod client
-- **Litematica EasyPlace** — ProtocolLib-based schematic block state correction for Litematica's EasyPlace mode
-- **ServUX / MiniHUD Integration**
-  - Entity data preview (players, mobs, block entities)
-  - HUD data (TPS, MSPT, world time)
-  - Container preview (inventories, ender chests)
-  - Structure bounding box display
-  - Litematica schematic paste
+### 协议支持
+- **AppleSkin** — 向 AppleSkin 模组客户端同步玩家饱和度和疲劳度数据
+- **Litematica EasyPlace** — 基于 ProtocolLib 的投影方块状态修正，配合 EasyPlace 模式使用
+- **ServUX / MiniHUD 集成**
+  - 实体数据预览（玩家、生物、方块实体）
+  - HUD 数据（TPS、MSPT、游戏时间）
+  - 容器预览（背包、末影箱）
+  - 结构边界框显示
+  - Litematica 原理图粘贴
 
-### Item Cleanup
-- Automatic scheduled item (dropped item) cleanup
-- Configurable warning broadcasts before cleanup
-- Public recycle bin GUI (`/rubish`) with pagination
-- Player voting system (`/clean`) to trigger manual cleanup
-- Configurable auto-clear for bin overflow
+### 物品清理
+- 自动定时清理掉落物
+- 可配置的清理前警告广播
+- 公共垃圾桶 GUI（`/rubish`），支持分页
+- 玩家投票系统（`/clean`）手动触发清理
+- 可配置的垃圾桶自动清空
 
-## Requirements
+## 运行环境
 
 - Java 21+
-- Paper 1.21.x or Folia
-- ProtocolLib (for EasyPlace feature)
+- Paper 1.21.x 或 Folia
+- ProtocolLib
 
-## Build
+## 构建
 
 ```bash
-./gradlew build -Pv=<version>
+./gradlew build -Pv=<版本号>
 ```
 
-## Installation
+## 安装
 
-1. Place the JAR in `plugins/`
-2. Ensure ProtocolLib is installed
-3. Restart or reload the server
-4. Edit `plugins/The-Better-Folia/config.yml` as desired
+1. 将 JAR 放入 `plugins/` 目录
+2. 确保已安装 ProtocolLib
+3. 重启或重载服务端
+4. 根据需要编辑 `plugins/The-Better-Folia/config.yml`
 
-## Commands
+## 命令
 
-| Command | Permission | Description |
-|---------|-----------|-------------|
-| `/rubish` | `thebetterfolia.rubish` | Open the public recycle bin |
-| `/clean` | `thebetterfolia.clean` | Start a cleanup vote |
-| `/clean yes` | `thebetterfolia.clean` | Vote yes on an active cleanup |
+| 命令 | 权限 | 描述 |
+|------|------|------|
+| `/rubish` | `thebetterfolia.rubish` | 打开公共垃圾桶 |
+| `/clean` | `thebetterfolia.clean` | 发起清理投票 |
+| `/clean yes` | `thebetterfolia.clean` | 同意当前清理投票 |
 
-## Permissions
+## 权限
 
-| Permission | Default | Description |
-|-----------|---------|-------------|
-| `thebetterfolia.admin` | `op` | Access to all admin commands |
-| `thebetterfolia.rubish` | `true` | Use the recycle bin |
-| `thebetterfolia.clean` | `true` | Initiate and vote on cleanup |
-| `thebetterfolia.protocol.*` | `true` | All protocol features |
-| `thebetterfolia.protocol.appleskin` | `true` | AppleSkin protocol |
-| `thebetterfolia.protocol.litematica` | `true` | Litematica EasyPlace protocol |
-| `thebetterfolia.protocol.servux` | `true` | ServUX protocols |
+| 权限节点 | 默认 | 描述 |
+|---------|------|------|
+| `thebetterfolia.admin` | `op` | 所有管理命令 |
+| `thebetterfolia.rubish` | `true` | 使用垃圾桶 |
+| `thebetterfolia.clean` | `true` | 发起和参与清理投票 |
+| `thebetterfolia.protocol.*` | `true` | 所有协议功能 |
+| `thebetterfolia.protocol.appleskin` | `true` | AppleSkin 协议 |
+| `thebetterfolia.protocol.litematica` | `true` | Litematica EasyPlace 协议 |
+| `thebetterfolia.protocol.servux` | `true` | ServUX 协议 |
 
-## Configuration
+## 配置说明
 
-See `config.yml` for the full configuration. Key sections:
+完整配置详见 `config.yml`。主要模块：
 
-- **`cleanup`** — Interval, warnings, recycle bin, voting settings
-- **`servux`** — Entity sync, HUD sync, structures, container preview toggles
-- **`schematica`** — Litematics and EasyPlace toggles
-- **`appleskin`** — AppleSkin protocol toggle
+- **`cleanup`** — 清理间隔、警告、垃圾桶、投票设置
+- **`servux`** — 实体同步、HUD 同步、结构显示、容器预览开关
+- **`schematica`** — Litematics 原理图和 EasyPlace 开关
+- **`appleskin`** — AppleSkin 协议开关
 
-## Server Compatibility
+## 关于项目
 
-| Environment | Status |
-|-------------|--------|
-| Folia | Full support |
-| Paper | Full support |
-| Spigot | Limited (protocol features unavailable) |
-| Bukkit | Limited (protocol features unavailable) |
+该项目最初服务于一个 Folia 服务器，因维护精力有限，现将其开源。
+所以你可以看到多个毫不相关的功能集合于此。
 
-## License
+## 许可
 
-MIT
+GPL 3.0
