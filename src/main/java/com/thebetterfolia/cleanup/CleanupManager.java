@@ -68,6 +68,7 @@ public class CleanupManager {
 
         if (enabled) {
             startCleanupTask();
+            preventVanillaDespawn();
         }
     }
 
@@ -128,20 +129,22 @@ public class CleanupManager {
                 }
             };
 
-            if (plugin.isFolia()) {
-                Bukkit.getRegionScheduler().run(plugin, world.getSpawnLocation(), (t) -> task.run());
-            } else {
-                task.run();
-            }
-        }
-
         if (plugin.isFolia()) {
-            Bukkit.getGlobalRegionScheduler().runDelayed(plugin, (task) -> {
-                broadcastCleanup();
-            }, 3);
+            Bukkit.getRegionScheduler().run(plugin, world.getSpawnLocation(), (t) -> task.run());
         } else {
-            broadcastCleanup();
+            task.run();
         }
+    }
+
+    if (plugin.isFolia()) {
+        Bukkit.getGlobalRegionScheduler().runDelayed(plugin, (task) -> {
+            broadcastCleanup();
+            incrementBinVersion();
+        }, 3);
+    } else {
+        broadcastCleanup();
+        incrementBinVersion();
+    }
     }
 
     private void broadcastCleanup() {
@@ -265,6 +268,23 @@ public class CleanupManager {
         binClearSecondsPassed = 0;
     }
 
+    public ItemStack takeItem(int index) {
+        synchronized (rubbishBin) {
+            if (index >= 0 && index < rubbishBin.size()) {
+                ItemStack item = rubbishBin.remove(index);
+                binVersion++;
+                return item;
+            }
+            return null;
+        }
+    }
+
+    public void incrementBinVersion() {
+        synchronized (rubbishBin) {
+            binVersion++;
+        }
+    }
+
     public int getBinVersion() {
         return binVersion;
     }
@@ -286,6 +306,37 @@ public class CleanupManager {
     }
 
     public void shutdown() {}
+
+    public void preventVanillaDespawn() {
+        if (!enabled) return;
+        for (World world : Bukkit.getWorlds()) {
+            List<Item> items = new ArrayList<>(world.getEntitiesByClass(Item.class));
+            if (items.isEmpty()) continue;
+
+            if (plugin.isFolia()) {
+                Map<Long, List<Item>> byChunk = new HashMap<>();
+                for (Item item : items) {
+                    Location loc = item.getLocation();
+                    int cx = loc.getBlockX() >> 4;
+                    int cz = loc.getBlockZ() >> 4;
+                    long key = (long) cx << 32 | (cz & 0xFFFFFFFFL);
+                    byChunk.computeIfAbsent(key, k -> new ArrayList<>()).add(item);
+                }
+                for (Map.Entry<Long, List<Item>> entry : byChunk.entrySet()) {
+                    Location center = entry.getValue().get(0).getLocation();
+                    Bukkit.getRegionScheduler().run(plugin, center, (t) -> {
+                        for (Item item : entry.getValue()) {
+                            try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                        }
+                    });
+                }
+            } else {
+                for (Item item : items) {
+                    try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                }
+            }
+        }
+    }
 
     public static class WarningEntry {
         public final int time;

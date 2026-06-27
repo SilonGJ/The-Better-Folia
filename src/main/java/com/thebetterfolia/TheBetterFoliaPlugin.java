@@ -7,6 +7,12 @@ import com.thebetterfolia.cleanup.RubishCommand;
 import com.thebetterfolia.cleanup.RubishGUI;
 import com.thebetterfolia.protocol.ProtocolManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -133,6 +139,26 @@ public class TheBetterFoliaPlugin extends JavaPlugin {
 
         RubishGUI rubishGUI = new RubishGUI();
         Bukkit.getPluginManager().registerEvents(rubishGUI, this);
+
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onEntitySpawn(EntitySpawnEvent event) {
+                if (cleanupManager != null && cleanupManager.isEnabled() && event.getEntity() instanceof Item item) {
+                    try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                }
+            }
+
+            @EventHandler
+            public void onEntitiesLoad(EntitiesLoadEvent event) {
+                if (cleanupManager != null && cleanupManager.isEnabled()) {
+                    for (Entity entity : event.getEntities()) {
+                        if (entity instanceof Item item) {
+                            try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                        }
+                    }
+                }
+            }
+        }, this);
 
         RubishCommand rubishCommand = new RubishCommand(rubishGUI);
         getCommand("rubish").setExecutor(rubishCommand);
