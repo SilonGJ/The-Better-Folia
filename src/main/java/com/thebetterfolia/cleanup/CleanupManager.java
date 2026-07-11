@@ -11,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -32,6 +33,31 @@ public class CleanupManager {
     private int lastCleanAmount = 0;
     private int lastCleanStacks = 0;
     private String cleanupMessage;
+    private int ageResetCounter = 0;
+    private static final int AGE_RESET_INTERVAL = 240; // seconds (4800 ticks)
+
+    private static Field itemEntityAgeField;
+    static {
+        try {
+            Class<?> itemEntityClass = Class.forName("net.minecraft.world.entity.item.ItemEntity");
+            itemEntityAgeField = itemEntityClass.getDeclaredField("age");
+            itemEntityAgeField.setAccessible(true);
+        } catch (Exception e) {
+            TheBetterFoliaPlugin plugin = TheBetterFoliaPlugin.getInstance();
+            if (plugin != null) {
+                plugin.getLogger().warning("Failed to initialize ItemEntity.age reflection: " + e.getMessage());
+            }
+        }
+    }
+
+    public static void resetItemAge(Item item) {
+        if (itemEntityAgeField == null) return;
+        try {
+            Object craftItem = item;
+            Object nmsItem = craftItem.getClass().getMethod("getHandle").invoke(craftItem);
+            itemEntityAgeField.setInt(nmsItem, 0);
+        } catch (Exception ignored) {}
+    }
 
     public CleanupManager(TheBetterFoliaPlugin plugin) {
         this.plugin = plugin;
@@ -68,7 +94,7 @@ public class CleanupManager {
 
         if (enabled) {
             startCleanupTask();
-            preventVanillaDespawn();
+            resetAllItemAges();
         }
     }
 
@@ -103,6 +129,12 @@ public class CleanupManager {
         if (autoClearInterval > 0 && binClearSecondsPassed >= autoClearInterval) {
             binClearSecondsPassed = 0;
             clearBin();
+        }
+
+        ageResetCounter++;
+        if (ageResetCounter >= AGE_RESET_INTERVAL) {
+            ageResetCounter = 0;
+            resetAllItemAges();
         }
     }
 
@@ -307,7 +339,7 @@ public class CleanupManager {
 
     public void shutdown() {}
 
-    public void preventVanillaDespawn() {
+    public void resetAllItemAges() {
         if (!enabled) return;
         for (World world : Bukkit.getWorlds()) {
             List<Item> items = new ArrayList<>(world.getEntitiesByClass(Item.class));
@@ -326,13 +358,13 @@ public class CleanupManager {
                     Location center = entry.getValue().get(0).getLocation();
                     Bukkit.getRegionScheduler().run(plugin, center, (t) -> {
                         for (Item item : entry.getValue()) {
-                            try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                            resetItemAge(item);
                         }
                     });
                 }
             } else {
                 for (Item item : items) {
-                    try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                    resetItemAge(item);
                 }
             }
         }

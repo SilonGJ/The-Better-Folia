@@ -144,7 +144,7 @@ public class TheBetterFoliaPlugin extends JavaPlugin {
             @EventHandler
             public void onEntitySpawn(EntitySpawnEvent event) {
                 if (cleanupManager != null && cleanupManager.isEnabled() && event.getEntity() instanceof Item item) {
-                    try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                    CleanupManager.resetItemAge(item);
                 }
             }
 
@@ -153,7 +153,7 @@ public class TheBetterFoliaPlugin extends JavaPlugin {
                 if (cleanupManager != null && cleanupManager.isEnabled()) {
                     for (Entity entity : event.getEntities()) {
                         if (entity instanceof Item item) {
-                            try { item.setUnlimitedLifetime(true); } catch (Exception ignored) {}
+                            CleanupManager.resetItemAge(item);
                         }
                     }
                 }
