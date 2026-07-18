@@ -1,3 +1,7 @@
+## 由于此项目的实现过于潦草，以及某些需要，所以暂时归档该项目。以后大抵会拿出来改 (?
+## 需要类似协议支持可以前往 Lophine 的仓库，它们的实现兼容性更广，且 Bug 更少：https://github.com/LophineCraft/Lophine
+## 先这样吧，如果这个项目真的有人用的前提下
+
 # The-Better-Folia
 
 一个高性能、兼容 Folia 的 Bukkit/Paper 服务端插件，提供 AppleSkin、Litematica EasyPlace 和 ServUX 协议支持，以及物品清理系统。
