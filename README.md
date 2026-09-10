@@ -1,5 +1,6 @@
-## 由于此项目较潦草，bug也有点多，以及某些需要，所以暂时归档该项目
-## 需要类似协议支持可以前往 Lophine 的仓库，他们的实现兼容性更广，且 Bug 更少：https://github.com/LophineCraft/Lophine
+> 由于此项目较潦草，bug也有点多，以及某些需要，所以暂时归档该项目  
+> 需要类似协议支持可以前往 Lophine 的仓库，他们的实现兼容性更广，且 Bug 更少：
+> https://github.com/LophineCraft/Lophine
 
 # The-Better-Folia
 
